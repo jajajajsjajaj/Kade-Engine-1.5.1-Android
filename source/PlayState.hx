@@ -15,6 +15,7 @@ import lime.app.Application;
 import lime.media.AudioContext;
 import lime.media.AudioManager;
 import openfl.Lib;
+import ZardyDialogBox.ZardyDialogueBox
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -107,6 +108,7 @@ class PlayState extends MusicBeatState
 	public static var dad:Character;
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
+  public static var ZardyBackground:FlxSprite;
 
 	public var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -181,6 +183,8 @@ class PlayState extends MusicBeatState
 	var songScoreDef:Int = 0;
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
+
+  public static var poggin:Bool = false;
 
 	public static var campaignScore:Int = 0;
 
@@ -348,6 +352,9 @@ class PlayState extends MusicBeatState
 				dialogue = CoolUtil.coolTextFile(Paths.txt('roses/rosesDialogue'));
 			case 'thorns':
 				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
+      case 'foolhardy':
+				dialogue = CoolUtil.coolTextFile(Paths.txt('foolhardy/poggin'));
+		}
 		}
 
 		switch(SONG.stage)
@@ -703,30 +710,16 @@ class PlayState extends MusicBeatState
 				}
 			default:
 			{
-					defaultCamZoom = 0.9;
-					curStage = 'stage';
-					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
-					bg.antialiasing = true;
-					bg.scrollFactor.set(0.9, 0.9);
-					bg.active = false;
-					add(bg);
-
-					var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
-					stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-					stageFront.updateHitbox();
-					stageFront.antialiasing = true;
-					stageFront.scrollFactor.set(0.9, 0.9);
-					stageFront.active = false;
-					add(stageFront);
-
-					var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-					stageCurtains.updateHitbox();
-					stageCurtains.antialiasing = true;
-					stageCurtains.scrollFactor.set(1.3, 1.3);
-					stageCurtains.active = false;
-
-					add(stageCurtains);
+			defaultCamZoom = 0.9;
+			curStage = 'stage';
+			ZardyBackground = new FlxSprite(-600, -200);
+			ZardyBackground.frames = Paths.getSparrowAtlas('Maze','ChallengeWeek');
+			ZardyBackground.animation.addByPrefix('Maze','Stage', 16);
+			ZardyBackground.antialiasing = true;
+			ZardyBackground.scrollFactor.set(0.9, 0.9);
+			ZardyBackground.animation.play('Maze');
+			add(ZardyBackground);
+		}
 			}
 		}
 		var gfVersion:String = 'gf';
@@ -782,6 +775,9 @@ class PlayState extends MusicBeatState
 				dad.x += 150;
 				dad.y += 360;
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+      case 'zardy':
+				camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 240);
+				dad.x -= 80;
 			case 'spirit':
 				dad.x -= 150;
 				dad.y += 100;
@@ -1072,6 +1068,12 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
+        case 'foolhardy':
+					dad.alpha = 0;
+					if (!poggin)
+						pogginIntro(doof);
+					else
+						startCountdown();
 				default:
 					startCountdown();
 			}
@@ -1089,6 +1091,20 @@ class PlayState extends MusicBeatState
 			rep = new Replay("na");
 
 		super.create();
+	}
+
+  	function pogginIntro(ZardyDialogBox:ZardyDialogueBox):Void
+	{
+		poggin = true;
+		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+			{
+					if (ZardyDialogBox != null)
+					{
+						trace('cutsceneee');
+						inCutscene = true;
+						add(ZardyDialogBox);
+					}
+			});
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
