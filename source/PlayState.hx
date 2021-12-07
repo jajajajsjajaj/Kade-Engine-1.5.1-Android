@@ -15,7 +15,7 @@ import lime.app.Application;
 import lime.media.AudioContext;
 import lime.media.AudioManager;
 import openfl.Lib;
-import ZardyDialogBox.ZardyDialogueBox
+import ZardyDialogBox.ZardyDialogueBox;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
