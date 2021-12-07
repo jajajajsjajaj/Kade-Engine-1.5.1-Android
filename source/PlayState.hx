@@ -355,7 +355,6 @@ class PlayState extends MusicBeatState
       case 'foolhardy':
 				dialogue = CoolUtil.coolTextFile(Paths.txt('foolhardy/poggin'));
 		}
-		}
 
 		switch(SONG.stage)
 		{
